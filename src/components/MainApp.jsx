@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import { getApiData } from "../services/getApi";
 import Table from "react-bootstrap/Table";
 import DropD from "./DropD";
+import { useNavigate } from "react-router-dom";
 
 function MainApp() {
+  const navigate = useNavigate();
   const index = 0;
   const [schedules, setSchedules] = useState([]);
   const [type, setType] = useState("sr:season:77453");
@@ -30,6 +32,14 @@ function MainApp() {
     return tabl[idN];
   }
 
+  function Check(a) {
+    let dataF = "";
+    for (let i = 0; i < schedules.length; i++) {
+      dataF = schedules[a].sport_event.id;
+    }
+    return navigate(`/${dataF}`);
+  }
+
   return (
     <div>
       <DropD type={type} setType={setType} />
@@ -46,25 +56,30 @@ function MainApp() {
           </tr>
         </thead>
         <tbody>
-          {schedules.map((schedule, id) => {
+          {schedules?.map((schedule, id) => {
             return (
-              <tr key={id}>
+              <tr
+                key={id}
+                onClick={() => {
+                  Check(id);
+                }}
+              >
                 {schedule.sport_event_status.status === "postponed" ? (
                   <td className="bg-secondary">
                     {schedule.sport_event.competitors[index].name}
                   </td>
-                ) : schedule.sport_event_status.match_tie ? (
+                ) : schedule?.sport_event_status?.match_tie ? (
                   <td className="bg-warning">
-                    {schedule.sport_event.competitors[index].name}
+                    {schedule?.sport_event?.competitors[index]?.name}
                   </td>
-                ) : schedule.sport_event.competitors[0].id ===
-                  schedule.sport_event_status.winner_id ? (
+                ) : schedule?.sport_event?.competitors[0]?.id ===
+                  schedule?.sport_event_status?.winner_id ? (
                   <td className="bg-success">
-                    {schedule.sport_event.competitors[index].name}
+                    {schedule?.sport_event?.competitors[index]?.name}
                   </td>
                 ) : (
                   <td className="bg-danger">
-                    {schedule.sport_event.competitors[index].name}
+                    {schedule?.sport_event?.competitors[index]?.name}
                   </td>
                 )}
 
@@ -72,32 +87,32 @@ function MainApp() {
                   <td className="bg-secondary">
                     {schedule.sport_event.competitors[1].name}
                   </td>
-                ) : schedule.sport_event_status.match_tie ? (
+                ) : schedule?.sport_event_status?.match_tie ? (
                   <td className="bg-warning">
-                    {schedule.sport_event.competitors[1].name}
+                    {schedule?.sport_event?.competitors[1]?.name}
                   </td>
-                ) : schedule.sport_event.competitors[1].id ===
-                  schedule.sport_event_status.winner_id ? (
+                ) : schedule?.sport_event?.competitors[1].id ===
+                  schedule?.sport_event_status?.winner_id ? (
                   <td className="bg-success">
-                    {schedule.sport_event.competitors[1].name}
+                    {schedule?.sport_event?.competitors[1]?.name}
                   </td>
                 ) : (
                   <td className="bg-danger">
-                    {schedule.sport_event.competitors[1].name}
+                    {schedule?.sport_event?.competitors[1]?.name}
                   </td>
                 )}
 
                 <td>
-                  {schedule.sport_event_status.home_score} :{" "}
-                  {schedule.sport_event_status.away_score}
+                  {schedule?.sport_event_status?.home_score} :{" "}
+                  {schedule?.sport_event_status?.away_score}
                 </td>
                 <td>
                   {new Date(
-                    schedule.sport_event.start_time
+                    schedule?.sport_event?.start_time
                   ).toLocaleDateString()}{" "}
                 </td>
                 <td>{HalfT(id)}</td>
-                <td>{schedule.sport_event.venue.name}</td>
+                <td>{schedule?.sport_event?.venue?.name}</td>
               </tr>
             );
           })}

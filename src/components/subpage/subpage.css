@@ -1,0 +1,95 @@
+
+.imgdiv, .imgdiv1 {
+    width: 60px;
+    height: 60px;
+   
+  }
+  .match_info h1{
+    text-align: center;
+    margin-bottom: 30px;
+    margin-top: 30px;
+  
+  }
+  
+  .match_info_p {
+    text-align: center;
+  
+  }
+  
+  .main-container {
+    background-color:#c7eff0;
+  }
+  .head {
+    position: relative;
+    background-color: #54BAB9;
+    border-radius: 7.5px;
+    margin: 0 10px;
+    padding: 10px 10px 0;
+    display: flex;
+    flex-direction: row;
+  }
+  
+  .team1,
+  .team2,
+  .result {
+    align-items: center;
+    color: #131212;
+    display: flex;
+    font-weight: 700;
+    flex: 1 1;
+    height: 120px;
+    justify-content: center;
+    margin: auto;
+    max-width: 120px;
+  }
+  
+  .team1,
+  .team2 {
+    flex-direction: column;
+  
+    text-align: center;
+    flex: 1 1;
+  }
+  .result {
+    display: flex;
+    align-items: center;
+    font-size: 2rem;
+    position: relative;
+  }
+  
+  .tab_container {
+    border-bottom: 1px solid #222;
+    width: 100%;
+    padding: 12px 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+  }
+  .tab_container button {
+    flex: 1;
+    max-width: 150px;
+    min-width: 120px;
+    margin: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color:  #2d3254;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  button:focus {
+    background-color:#bae0e1;
+  }
+  button {
+    background: none;
+    color: inherit;
+    border: none;
+    padding: 0;
+    font: inherit;
+    cursor: pointer;
+    outline: inherit;
+  }
+  
