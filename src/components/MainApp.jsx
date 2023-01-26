@@ -1,18 +1,19 @@
 import React, { useState, useEffect } from "react";
-import Axios from "axios";
+import { getApiData } from "../services/getApi";
 import Table from "react-bootstrap/Table";
+import DropD from "./DropD";
 
 function MainApp() {
   const index = 0;
   const [schedules, setSchedules] = useState([]);
+  const [type, setType] = useState("sr:season:77453");
+
   useEffect(() => {
-    Axios.get(
-      "https://cors-anywhere.herokuapp.com/https://api.sportradar.us/soccer/trial/v4/en/seasons/sr:season:77453/schedules.json?api_key=p2fjeanpgmrbmh9mymhuufwp"
-    ).then((res) => {
-      setSchedules(res.data.schedules);
-      console.log(res.data.schedules);
+    getApiData(type).then((data) => {
+      setSchedules(data.schedules);
+      //console.log(data.schedules);
     });
-  }, []);
+  }, [type]);
 
   function HalfT(idN) {
     const tabl = [];
@@ -31,6 +32,8 @@ function MainApp() {
 
   return (
     <div>
+      <DropD type={type} setType={setType} />
+
       <Table striped bordered hover>
         <thead>
           <tr>
