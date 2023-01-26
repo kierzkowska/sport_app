@@ -2,7 +2,14 @@ import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Axios from "axios";
 import "./subpage.css";
-import { stadium, calendar } from "./import"
+import {
+  stadium,
+  calendar,
+  football,
+  change,
+  yellowcard,
+  redcard,
+} from "./import";
 import Table from "react-bootstrap/Table";
 import ProgressBar from "react-bootstrap/ProgressBar";
 
@@ -24,6 +31,13 @@ const Matchinfo = ({ parame }) => {
 
 function Timeline({ a }) {
   let tab = [];
+  // let tab8 = [];
+  const k = { ...a };
+  console.log(k);
+  const pic = <img className="imgdiv2" src={yellowcard} alt="yellowcard" />;
+  const red = <img className="imgdiv2" src={redcard} alt="redcard" />;
+  const ball = <img className="imgdiv2" src={football} alt="football" />;
+  const chan = <img className="imgdiv2" src={change} alt="change" />;
   for (let i = 0; i < a.timeline.length; i++) {
     tab.push(a.timeline[i]);
     if (
@@ -34,22 +48,25 @@ function Timeline({ a }) {
       a.timeline[i].type === "shot_off_target" ||
       a.timeline[i].type === "offside" ||
       a.timeline[i].type === "shot_on_target" ||
+      a.timeline[i].type === "penalty_awarded" ||
       a.timeline[i].type === "injury" ||
       a.timeline[i].type === "injury_return" ||
       a.timeline[i].type === "injury_time_shown" ||
       a.timeline[i].type === "shot_saved" ||
       a.timeline[i].type === "possible_goal" ||
       a.timeline[i].type === "break_start" ||
+      a.timeline[i].type === "video_assistant_referee" ||
+      a.timeline[i].type === "video_assistant_referee_over" ||
       a.timeline[i].type === "corner_kick"
     )
       tab.pop(a.timeline[i]);
     if (a.timeline[i].type === "substitution")
       a.timeline[i].type =
-        a.timeline[i].type +
-        " " +
+        "Substitution - " +
         a.timeline[i].players[0].name +
-        " into " +
+        " to " +
         a.timeline[i].players[1].name;
+
     if (a.timeline[i].type === "score_change")
       a.timeline[i].type =
         a.timeline[i].home_score +
@@ -57,12 +74,12 @@ function Timeline({ a }) {
         a.timeline[i].away_score +
         " " +
         a.timeline[i].players[0].name;
-    if (a.timeline[i].type === "yellow_card")
-      a.timeline[i].type =
-        a.timeline[i].type + " " + a.timeline[i].players[0].name;
+    if (a.timeline[i].type === "yellow_card") {
+      a.timeline[i].type = "Yellow card to " + a.timeline[i].players[0].name;
+      // a.timeline[i].players[0].name += pic;
+    }
     if (a.timeline[i].type === "red_card")
-      a.timeline[i].type =
-        a.timeline[i].type + " " + a.timeline[i].players[0].name;
+      a.timeline[i].type = "Red Card to " + a.timeline[i].players[0].name;
     if (
       a.timeline[i].stoppage_time &&
       (a.timeline[i].match_time === 90 || a.timeline[i].match_time === 45)
@@ -77,11 +94,21 @@ function Timeline({ a }) {
     if (a.timeline[i].type === "match_started")
       a.timeline[i].type = "FIRST HALF";
   }
+
+  //   function Help(idN) {
+  //     let ta = [];
+  //     for (let i = 0; i < tab8.length; i++) {
+  //       ta = tab8[i];
+  //     }
+  //     return ta[idN];
+  //   }
+
   return (
     <Table striped bordered hover variant="secondary">
       <thead>
         <tr>
           <th>Minutes</th>
+          <th></th>
           <th></th>
         </tr>
       </thead>
@@ -90,10 +117,26 @@ function Timeline({ a }) {
           return (
             <tr key={id}>
               <td>{data.match_time}</td>
-              {data?.competitor === "home" ? (
-                <td className="text-start">{data?.type}</td>
+              {data.competitor ? (
+                data?.competitor === "home" ? (
+                  <td className="text-start">{data?.type}</td>
+                ) : (
+                  <td className="text-end">{data?.type}</td>
+                )
               ) : (
-                <td className="text-end">{data?.type}</td>
+                <td className="text-center">{data?.type}</td>
+              )}
+
+              {data.type.includes("Goal") ? (
+                <td>{ball}</td>
+              ) : data.type.includes("Substitution") ? (
+                <td>{chan}</td>
+              ) : data.type.includes("Red") ? (
+                <td>{red}</td>
+              ) : data.type.includes("Yellow") ? (
+                <td>{pic}</td>
+              ) : (
+                <td></td>
               )}
             </tr>
           );
@@ -429,7 +472,7 @@ function Subpage() {
       `https://cors-anywhere.herokuapp.com/https://api.sportradar.us/soccer/trial/v4/en/sport_events/${id}/timeline.json?api_key=p2fjeanpgmrbmh9mymhuufwp`
     ).then((res) => {
       setParam(res.data);
-      //console.log(res.data);
+      // console.log(res.data);
     });
   }, []);
 
@@ -459,19 +502,10 @@ function Subpage() {
           <button onClick={handleClick3}>Line-ups</button>
         </div>
       </div>
-      <div className="kuku">
-        {" "}
-        {isShown ? <Matchinfo parame={param} /> : null}
-      </div>
-      <div className="kuku">
-        {" "}
-        {isShown1 ? <Summaryinfo par={param} /> : null}
-      </div>
-      <div className="kuku">
-        {" "}
-        {isShown2 ? <Statsinfo para={param} /> : null}
-      </div>
-      <div className="kuku"> {isShown3 ? <Lineinfo pa={param} /> : null}</div>
+      <div> {isShown ? <Matchinfo parame={param} /> : null}</div>
+      <div> {isShown1 ? <Summaryinfo par={param} /> : null}</div>
+      <div> {isShown2 ? <Statsinfo para={param} /> : null}</div>
+      <div> {isShown3 ? <Lineinfo pa={param} /> : null}</div>
     </div>
   );
 }
